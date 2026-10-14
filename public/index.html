@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta CPF</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <main class="container">
+        <div class="card">
+            <div class="logo">CPF<span>.</span></div>
+
+            <h1>Consulta de CPF</h1>
+            <p class="subtitle">
+                Interface demonstrativa para consulta autorizada.
+            </p>
+
+            <form id="formConsulta">
+                <label for="cpf">CPF</label>
+                <input id="cpf" name="cpf" type="text" inputmode="numeric" maxlength="14" placeholder="000.000.000-00"
+                    required>
+
+                <button id="btnConsultar" type="submit">
+                    Consultar
+                </button>
+            </form>
+
+            <div id="resultado" class="resultado" hidden></div>
+
+            <p class="aviso">
+                Utilize apenas dados que você esteja autorizado a consultar.
+            </p>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
