@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "postinstall": "node node_modules/playwright-core/cli.js install chromium"
+    "postinstall": "PLAYWRIGHT_BROWSERS_PATH=./browsers node node_modules/playwright-core/cli.js install chromium"
   },
   "keywords": [],
   "author": "",

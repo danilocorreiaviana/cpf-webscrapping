@@ -74,7 +74,9 @@
 // testarNavegador().catch(console.error);
 
 const express = require("express");
-const { chromium } = require("playwright");
+const { chromium } = require("playwright-core");
+
+process.env.PLAYWRIGHT_BROWSERS_PATH = process.env.PLAYWRIGHT_BROWSERS_PATH || "./browsers";
 
 const app = express();
 const PORTA = process.env.PORT || 3000;
