@@ -115,57 +115,60 @@ app.post("/consultar", async (req, res) => {
 
         const page = await browser.newPage();
 
-        page.setDefaultTimeout(10000);
+page.setDefaultTimeout(30000);
 
         await page.goto(URL_CONSULTA, {
-            waitUntil: "domcontentloaded",
-            timeout: 30000,
+            waitUntil: "networkidle",
+            timeout: 60000,
         });
 
+        await page.waitForSelector("#cpf", { state: "visible", timeout: 30000 });
         await page.locator("#cpf").fill(cpf);
         await page.locator("#cpf").blur();
 
         const campoNome = page.locator("#nome");
 
-try {
-                await campoNome.waitFor({
-                    state: "visible",
-                    timeout: 10000,
-                });
+        try {
+            await campoNome.waitFor({
+                state: "visible",
+                timeout: 30000,
+            });
 
-                await page.waitForFunction(() => {
-                    const campo = document.querySelector("#nome");
+            await page.waitForFunction(() => {
+                const campo = document.querySelector("#nome");
 
-                    return campo &&
-                        typeof campo.value === "string" &&
-                        campo.value.trim().length > 0;
-                }, null, {
-                    timeout: 10000,
-                });
+                return campo &&
+                    typeof campo.value === "string" &&
+                    campo.value.trim().length > 0;
+            }, null, {
+                timeout: 30000,
+            });
 
-                const nomePreenchido = await campoNome.inputValue();
+            const nomePreenchido = await campoNome.inputValue();
 
-                return res.json({
-                    sucesso: true,
-                    nomePreenchido: true,
-                    nome: nomePreenchido,
-                    mensagem: "O campo de nome foi preenchido automaticamente.",
-                });
-            } catch {
-                return res.json({
-                    sucesso: true,
-                    nomePreenchido: false,
-                    mensagem:
-                        "O campo de nome não foi preenchido automaticamente.",
-                });
-            }
+            return res.json({
+                sucesso: true,
+                nomePreenchido: true,
+                nome: nomePreenchido,
+                mensagem: "O campo de nome foi preenchido automaticamente.",
+            });
+        } catch (e) {
+            const html = await page.content();
+            console.error("HTML da página no erro:", html.substring(0, 2000));
+            return res.json({
+                sucesso: true,
+                nomePreenchido: false,
+                mensagem:
+                    "O campo de nome não foi preenchido automaticamente.",
+            });
+        }
     } catch (error) {
         console.error("Falha no teste Playwright:", error.message);
+        console.error("Stack:", error.stack);
 
         return res.status(502).json({
             sucesso: false,
-            mensagem:
-                "Não foi possível concluir o teste. Verifique a disponibilidade da página.",
+            mensagem: error.message || "Não foi possível concluir o teste. Verifique a disponibilidade da página.",
         });
     } finally {
         if (browser) {
